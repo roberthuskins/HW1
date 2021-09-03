@@ -19,16 +19,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LandingPage extends AppCompatActivity {
     private TextView textViewResult;
 
-    public static final String ACTIVITY_LABEL = "LANDING_PAGE";
+    public static final String USERNAME = "USERNAME";
+    public static final String ID = "ID";
+    public static String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
+        //https://stackoverflow.com/a/5265952
+        Bundle extras = getIntent().getExtras();
         textViewResult = findViewById(R.id.text_view_result);
-
-        //refactor this in a seperate file in order to add both users and
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com/").addConverterFactory(GsonConverterFactory.create()).build();
 
         JsonApi jsonApi = retrofit.create(JsonApi.class);
@@ -44,15 +46,16 @@ public class LandingPage extends AppCompatActivity {
                 }
 
                 List<Post> posts = response.body();
-
+                textViewResult.setText("Hello there! Here are your posts, " + extras.getString(USERNAME) + "\n Your ID # is " + extras.get(ID) + "\n\n\n");
                 for(Post post: posts) {
-                    String content = "";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "ID : " + post.getId() + "\n";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "Text" + post.getText() + "\n\n\n";
+                    if(post.getUserId() == extras.getInt(ID)) {
+                        String content = "";
+                        content += "Title: " + post.getTitle() + "\n";
+                        content += "Post By: " + username + "\n";
+                        content += "Text" + post.getText() + "\n\n\n";
+                        textViewResult.append(content);
+                    }
 
-                    textViewResult.append(content);
                 }
             }
 
@@ -63,9 +66,10 @@ public class LandingPage extends AppCompatActivity {
         });
     }
 
-    public static Intent getIntent(Context context, String toastValue) {
+    public static Intent getIntent(Context context, String username, int ID) {
         Intent intent = new Intent(context, LandingPage.class);
-        intent.putExtra(LandingPage.ACTIVITY_LABEL, toastValue);
+        intent.putExtra(LandingPage.USERNAME, username);
+        intent.putExtra(LandingPage.ID, ID);
         return intent;
     }
 }

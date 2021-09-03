@@ -9,4 +9,6 @@ public interface JsonApi {
     @GET("posts")
     Call<List<Post>> getPosts();
 
+    @GET("users")
+    Call<List<User>> getUsers();
 }
