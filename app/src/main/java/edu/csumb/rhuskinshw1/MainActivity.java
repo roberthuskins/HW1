@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         if (userID == -1) {
             name.setTextColor(Color.RED);
             Toast.makeText(getApplicationContext(),"Invalid Username",Toast.LENGTH_SHORT).show();
-        } else if (!LoginUtils.verifyPassword(password.getText().toString(), userID-1)) {
+        } else if (!LoginUtils.verifyPassword(password.getText().toString(), userID)) {
             password.setTextColor(Color.RED);
             Toast.makeText(getApplicationContext(),"Invalid Password",Toast.LENGTH_SHORT).show();
         }
